@@ -1,0 +1,50 @@
+executors:
+  default: # デフォルトのDockerイメージ
+    docker:
+      - image: circleci/node:12.13.1
+    working_directory: ~/repo
+
+version: 2.1
+jobs:
+  setup:
+    executor: default
+    steps:
+      - checkout
+      - run:
+          name: Nodeモジュールのインストール
+          command: yarn install
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - node_modules
+
+  test_jest:
+    parallelism: 2
+    executor: default
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: jest-junitパッケージを追加
+          command: yarn add --dev jest-junit
+      - run:
+          name: Jestを並列実行
+          command: |
+            npx jest --ci --maxWorkers=2 \
+            --reporters=default --reporters=jest-junit \
+            $(circleci tests glob "__tests__/*.ts" | \
+            circleci tests split)
+          environment: # テストレポートの出力先を指定
+            JEST_JUNIT_OUTPUT_DIR: "reports/jest"
+      - store_test_results: # テストレポートを保存
+          path: reports
+
+workflows:
+  version: 2
+  build_test:
+    jobs:
+      - setup
+      - test_jest:
+          requires: # setup のあとに実行
+            - setup
