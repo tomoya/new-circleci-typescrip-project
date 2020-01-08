@@ -19,7 +19,6 @@ jobs:
             - node_modules
 
   test_jest:
-    parallelism: 2
     executor: default
     steps:
       - checkout
@@ -32,9 +31,7 @@ jobs:
           name: Jestを並列実行
           command: |
             npx jest --ci --maxWorkers=2 \
-            --reporters=default --reporters=jest-junit \
-            $(circleci tests glob "__tests__/*.ts" | \
-            circleci tests split)
+            --reporters=default --reporters=jest-junit
           environment: # テストレポートの出力先を指定
             JEST_JUNIT_OUTPUT_DIR: "reports/jest"
       - store_test_results: # テストレポートを保存
