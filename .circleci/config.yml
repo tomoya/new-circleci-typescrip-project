@@ -33,7 +33,7 @@ jobs:
           command: |
             TESTFILES=$(circleci tests glob "__tests__/*.ts" | \
             circleci tests split)
-            npx jest --ci --maxWorkers=2 \
+            npx jest --ci --runInBand \
             --reporters=default --reporters=jest-junit \
             $TESTFILES
           environment: # テストレポートの出力先を指定
