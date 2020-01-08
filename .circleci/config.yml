@@ -31,11 +31,10 @@ jobs:
       - run:
           name: Jestを並列実行
           command: |
-            TESTFILES=$(circleci tests glob "__tests__/*.ts" | \
-            circleci tests split --split-by=timings)
             npx jest --ci --maxWorkers=2 \
             --reporters=default --reporters=jest-junit \
-            -- $TESTFILES
+            -- $(circleci tests glob "__tests__/*.ts" | \
+            circleci tests split --split-by=timings)
           environment: # テストレポートの出力先を指定
             JEST_JUNIT_OUTPUT_DIR: "reports/jest"
       - store_test_results: # テストレポートを保存
