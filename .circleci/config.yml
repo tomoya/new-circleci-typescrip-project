@@ -26,12 +26,21 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: jest-junitパッケージを追加
+          command: yarn add --dev jest-junit
+      - run:
           name: Jestを並列実行
           command: |
             TESTFILES=$(circleci tests glob "__tests__/*.ts" | \
             circleci tests split)
             npx jest --ci --maxWorkers=2 \
+            --reporters=default --reporters=jest-junit \
             $TESTFILES
+          environment: # テストレポートの出力先を指定
+            JEST_JUNIT_OUTPUT_DIR: "reports/jest"
+            JEST_JUNIT_ADD_FILE_ATTRIBUTE: "true"
+      - store_test_results: # テストレポートを保存
+          path: reports
 
 workflows:
   version: 2
