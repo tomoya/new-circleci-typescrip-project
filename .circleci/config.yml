@@ -37,6 +37,7 @@ jobs:
             circleci tests split --split-by=timings)
           environment: # テストレポートの出力先を指定
             JEST_JUNIT_OUTPUT_DIR: "reports/jest"
+            JEST_JUNIT_ADD_FILE_ATTRIBUTE: "true"
       - store_test_results: # テストレポートを保存
           path: reports
 
