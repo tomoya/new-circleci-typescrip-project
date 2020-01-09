@@ -34,11 +34,10 @@ jobs:
             npx jest --ci --maxWorkers=2 \
             --reporters=default --reporters=jest-junit \
             -- $(circleci tests glob "__tests__/*.ts" | \
-            circleci tests split --split-by=timings)
-          environment: # テストレポートの出力先を指定
+            circleci tests split)
+          environment:
             JEST_JUNIT_OUTPUT_DIR: "reports/jest"
-            JEST_JUNIT_ADD_FILE_ATTRIBUTE: "true"
-      - store_test_results: # テストレポートを保存
+      - store_test_results:
           path: reports
 
 workflows:
