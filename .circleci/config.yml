@@ -1,7 +1,7 @@
 executors:
   default: # デフォルトのDockerイメージ
     docker:
-      - image: circleci/node:12.13.1
+      - image: cimg/node:lts
     working_directory: ~/repo
 
 version: 2.1
